@@ -1,3 +1,32 @@
+let modal = document.getElementById("modal");
+let btnOpen = document.getElementById("openCart");
+let btnClose = document.querySelector(".close");
+let count = document.querySelector("b");
+
+btnOpen.addEventListener("click", function () {
+    if (modal.style.display === "block") {
+        modal.classList.remove("swing-in-top-fwd");
+        modal.classList.add("swing-out-top-bck");
+        setTimeout(function () {
+            modal.style.display = "none";
+        }, 250);
+    } else {
+        modal.classList.remove("swing-out-top-bck");
+        modal.classList.add("swing-in-top-fwd");
+        setTimeout(function () {
+            modal.style.display = "block";
+        }, 250);
+    }
+});
+
+btnClose.addEventListener("click", function () {
+    modal.classList.remove("swing-in-top-fwd");
+    modal.classList.add("swing-out-top-bck");
+    setTimeout(function () {
+        modal.style.display = "none";
+    }, 1000);
+});
+
 const products = [
   {id: 1, title: 'Notebook', price: 20000},
   {id: 2, title: 'Mouse', price: 1500},
@@ -5,7 +34,7 @@ const products = [
   {id: 4, title: 'Gamepad', price: 4500},
 ];
 
-const renderProduct = (title, price) => {
+const renderProduct = (title = "some product", price) => {
   return `<div class="product-item">
             <h3>${title}</h3>
             <p>${price}</p>
