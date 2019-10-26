@@ -1,7 +1,9 @@
+/*-------------------------------------CART open/close---------------------------------------------------------*/
+
 let modal = document.getElementById("modal");
 let btnOpen = document.getElementById("openCart");
 let btnClose = document.querySelector(".close");
-let count = document.querySelector("b");
+/*let count = document.querySelector("b");*/
 
 btnOpen.addEventListener("click", function () {
     if (modal.style.display === "block") {
@@ -26,7 +28,13 @@ btnClose.addEventListener("click", function () {
         modal.style.display = "none";
     }, 1000);
 });
+/*--------------------------------------CART open/close---------------------------------------------------------*/
 
+
+
+
+
+/*-----------------------------------------------CATALOG--------------------------------------------------------*/
 const products = [
   {id: 1, title: 'Notebook', price: 20000},
   {id: 2, title: 'Mouse', price: 1500},
