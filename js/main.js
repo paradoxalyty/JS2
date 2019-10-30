@@ -50,7 +50,7 @@ const renderProduct = (title = "some product", price) => {
 };
 
 const renderProducts = goodsList => {
-  document.querySelector('.products').innerHTML = goodsList.map(good => renderProduct(good.title, good.price)).join('');
+  document.querySelector('.products').insertAdjacentHTML("beforeend", goodsList.map(good => renderProduct(good.title, good.price)).join(''));
 };
 
 renderProducts(products);
