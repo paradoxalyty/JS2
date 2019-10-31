@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    class Person {
+      constructor(name, yearOfBirth) {
+        this.name = name;
+        this.yearOfBirth = yearOfBirth;
+      }
+
+      sayHi() {
+        return `Good morning`;
+      }
+    }
+
+    class Teacher extends Person {
+      constructor(name, yearOfBirth) {
+        super(name, yearOfBirth);
+      }
+
+      sayHi() {
+        return `${super.sayHi()} students`;
+      }
+    }
+
+    class Student extends Person {
+        constructor(name, yearOfBirth) {
+            super(name, yearOfBirth);
+
+        }
+
+        sayHi() {
+            return `${super.sayHi()} Teacher`;
+        }
+    }
+
+    const ann = new Teacher('Ann', 1975);
+    const john = new Student('John', 1990);
+    const bob = new Student('Bob', 1991);
+    const jane = new Student('Jane', 1990);
+    const tom = new Student('Tom', 1991);
+
+
+    console.log(ann.sayHi());
+    console.log(john.sayHi(), " + " ,bob.sayHi(), " + " ,jane.sayHi(), " + " ,tom.sayHi());
+</script>
+</body>
+</html>
