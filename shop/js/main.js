@@ -31,9 +31,6 @@ btnClose.addEventListener("click", function () {
 /*--------------------------------------CART open/close---------------------------------------------------------*/
 
 
-
-
-
 /*-----------------------------------------------CATALOG--------------------------------------------------------*/
 class ProductList {
     constructor(container = '.products') {
@@ -46,6 +43,7 @@ class ProductList {
     init() {
         this._fetchProducts();
         this._render();
+        this._countTotalPrice();
     }
 
     _fetchProducts() {
@@ -65,6 +63,14 @@ class ProductList {
             this.allProducts.push(product);
             block.insertAdjacentHTML('beforeend', product.render());
         }
+    }
+
+    _countTotalPrice() {
+        let totalPrice = 0;
+        this.allProducts.forEach(item => {
+            totalPrice += item.price;
+        });
+        console.log(totalPrice);
     }
 }
 
@@ -94,18 +100,34 @@ class Cart {
     constructor() {
 
     }
-    init(){}
-    render(){}
-    totalCartPrice(){}
-    clearCart(){}
+
+    init() {
+    }
+
+    render() {
+    }
+
+    totalCartPrice() {
+    }
+
+    clearCart() {
+    }
 }
 
 class CartItem {
     constructor() {
 
     }
-    totalQuantity(){}
-    totalPrice(){}
-    addToCart(){}
-    removeFromCart(){}
+
+    totalQuantity() {
+    }
+
+    totalPrice() {
+    }
+
+    addToCart() {
+    }
+
+    removeFromCart() {
+    }
 }
