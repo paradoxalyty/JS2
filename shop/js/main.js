@@ -1,58 +1,40 @@
-/*-------------------------------------CART open/close---------------------------------------------------------*/
+const API = 'https://raw.githubusercontent.com/paradoxalyty/online-store-api-example/master/responses';
 
-let modal = document.getElementById("modal");
-let btnOpen = document.getElementById("openCart");
-let btnClose = document.querySelector(".close");
-/*let count = document.querySelector("b");*/
+function makeGETRequest(url) {
+    return new Promise(((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status !== 200) {
+                    reject('error');
+                } else {
+                    resolve(xhr.responseText);
+                }
+            }
+        }
+    }));
+}
 
-btnOpen.addEventListener("click", function () {
-    if (modal.style.display === "block") {
-        modal.classList.remove("swing-in-top-fwd");
-        modal.classList.add("swing-out-top-bck");
-        setTimeout(function () {
-            modal.style.display = "none";
-        }, 250);
-    } else {
-        modal.classList.remove("swing-out-top-bck");
-        modal.classList.add("swing-in-top-fwd");
-        setTimeout(function () {
-            modal.style.display = "block";
-        }, 250);
-    }
-});
-
-btnClose.addEventListener("click", function () {
-    modal.classList.remove("swing-in-top-fwd");
-    modal.classList.add("swing-out-top-bck");
-    setTimeout(function () {
-        modal.style.display = "none";
-    }, 1000);
-});
-/*--------------------------------------CART open/close---------------------------------------------------------*/
-
-
-/*-----------------------------------------------CATALOG--------------------------------------------------------*/
 class ProductList {
     constructor(container = '.products') {
         this.container = container;
         this.data = [];
         this.allProducts = [];
-        this.init();
-    }
-
-    init() {
-        this._fetchProducts();
-        this._render();
-        this._countTotalPrice();
+        this._fetchProducts()
+            .then(() => {
+                this._render();
+            });
     }
 
     _fetchProducts() {
-        this.data = [
-            {id: 1, title: 'Notebook', price: 40000},
-            {id: 2, title: 'Mouse', price: 1000},
-            {id: 3, title: 'Keyboard', price: 2500},
-            {id: 4, title: 'Gamepad', price: 1500},
-        ];
+        return fetch(`${API}/catalogData.json`)
+            .then(result => result.json())
+            .then(data => {
+                this.data = [...data];
+                console.log(this.data);
+            })
+            .catch(error => console.log(error));
     }
 
     _render() {
@@ -65,40 +47,57 @@ class ProductList {
         }
     }
 
-    _countTotalPrice() {
-        let totalPrice = 0;
-        this.allProducts.forEach(item => {
-            totalPrice += item.price;
-        });
-        console.log(totalPrice);
-    }
+
+    /*
+        _countTotalPrice() {
+            /!*let totalPrice = 0;
+            this.allProducts.forEach(item => {
+                totalPrice += item.price;
+            });
+            console.log(totalPrice);*!/
+            let totalPrice = this.allProducts.reduce((accum, item) => accum += item.price, 0);
+            console.log(totalPrice);
+        }*/
 }
+
+const catalog = new ProductList();
 
 class ProductItem {
     constructor(product, img = 'https://placehold.it/200x150') {
-        this.title = product.title;
+        this.product_name = product.product_name;
         this.price = product.price;
-        this.id = product.id;
+        this.product_id = product.product_id;
         this.img = img;
     }
 
     render() {
-        return `<div class="product-item" data-id="${this.id}">
-                <img src="${this.img}" alt="${this.title}">
+        return `<div class="product-item" data-id="${this.product_id}">
+                <img src="${this.img}" alt="${this.product_name}">
                 <div class="desc">
-                    <h3>${this.title}</h3>
+                    <h3>${this.product_name}</h3>
                     <p>${this.price} &curren;</p>
-                    <button class=" btn buy-btn">add to cart</button>
+                    <button class="btn addToCart" 
+                            data-id="${this.product_id}"
+                            data-name="${this.product_name}"
+                            data-image="${this.img}"
+                            data-price="${this.price}">
+                            add to cart</button>
                 </div>
             </div>`;
     }
 }
 
-const catalog = new ProductList();
-
 class Cart {
     constructor() {
+        this.cartBody = document.querySelector('#cartBody');
+        this.btnOpenCart = document.querySelector('#openCart');
+        this.btnCloseCart = document.querySelector('#closeCart');
 
+        this.btnEventListeners();
+
+    }
+
+    addToBasket() {
     }
 
     init() {
@@ -112,11 +111,44 @@ class Cart {
 
     clearCart() {
     }
+
+    btnEventListeners() {
+        this.btnOpenCart.addEventListener('click', () => this.openCart());
+        this.btnCloseCart.addEventListener('click', () => this.closeCart());
+    }
+
+    openCart() {
+        if (this.cartBody.style.display === "block") {
+            this.cartBody.classList.remove("swing-in-top-fwd");
+            this.cartBody.classList.add("swing-out-top-bck");
+            setTimeout(function () {
+                this.cartBody.style.display = "none";
+            }, 250);
+        } else {
+            this.cartBody.classList.remove("swing-out-top-bck");
+            this.cartBody.classList.add("swing-in-top-fwd");
+            setTimeout(function () {
+                this.cartBody.style.display = "block";
+            }, 250);
+        }
+    }
+
+    closeCart() {
+        this.cartBody.classList.remove("swing-in-top-fwd");
+        this.cartBody.classList.add("swing-out-top-bck");
+        setTimeout(function () {
+            this.cartBody.style.display = "none";
+        }, 1000);
+    }
 }
+
+const cart = new Cart;
 
 class CartItem {
     constructor() {
+    }
 
+    _init() {
     }
 
     totalQuantity() {
@@ -131,3 +163,7 @@ class CartItem {
     removeFromCart() {
     }
 }
+
+const cartItem = new CartItem();
+
+
