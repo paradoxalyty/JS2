@@ -79,7 +79,6 @@ class ProductItem {
                     <button class="btn addToCart" 
                             data-id="${this.product_id}"
                             data-name="${this.product_name}"
-                            data-image="${this.img}"
                             data-price="${this.price}">
                             add to cart</button>
                 </div>
