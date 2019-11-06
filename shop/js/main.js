@@ -209,7 +209,7 @@ class CartItem extends Item {
     render() {
         return `<div class="cart-item" data-id="${this.product_id}">
                     <div class="product-bio">
-                        <img src="${this.img}" alt="product image">
+                        <img src="${this.img}" class="cartItemImage" alt="product image">
                         <div class="product-desc">
                             <h3 class="product-name">${this.product_name}</h3>
                             <p class="product-quantity">Quantity: ${this.quantity}</p>
