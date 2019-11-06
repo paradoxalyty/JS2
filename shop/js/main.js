@@ -1,72 +1,67 @@
 const API = 'https://raw.githubusercontent.com/paradoxalyty/online-store-api-example/master/responses';
 
-function makeGETRequest(url) {
-    return new Promise(((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                if (xhr.status !== 200) {
-                    reject('error');
-                } else {
-                    resolve(xhr.responseText);
-                }
-            }
-        }
-    }));
-}
-
-class ProductList {
-    constructor(container = '.products') {
+class List {
+    constructor(url, container) {
         this.container = container;
+        this.url = url;
         this.data = [];
         this.allProducts = [];
-        this._fetchProducts()
-            .then(() => {
-                this._render();
-            });
+        this.filtered = [];
+        this._init();
     }
 
-    _fetchProducts() {
-        return fetch(`${API}/catalogData.json`)
+    getJson(url) {
+        return fetch(url ? url : `${API + this.url}`)
             .then(result => result.json())
-            .then(data => {
-                this.data = [...data];
-                console.log(this.data);
-            })
             .catch(error => console.log(error));
     }
 
-    _render() {
+    handleData(data) {
+        this.data = [...data];
+        this.render();
+    }
+
+    calcSum() {
+        return this.allProducts.reduce((accum, item) => accum += item.price, 0);
+    }
+
+    getItem(id) {
+        return this.allProducts.find(el => el.product_id === id);
+    }
+
+    render() {
         const block = document.querySelector(this.container);
 
         for (let item of this.data) {
-            const product = new ProductItem(item);
-            this.allProducts.push(product);
-            block.insertAdjacentHTML('beforeend', product.render());
+            const prod = new lists[this.constructor.name](item);
+            this.allProducts.push(prod);
+            block.insertAdjacentHTML('beforeend', prod.render());
         }
     }
 
+    filter(value) {
+        const regexp = new RegExp(value, 'i');
+        this.filtered = this.allProducts.filter(el => regexp.test(el.product_name));
+        this.allProducts.forEach(el => {
+            const block = document.querySelector(`.product-item[data-id="${el.product_id}"]`);
+            if (this.filtered.includes(el)) {
+                block.classList.remove('invisible');
+            } else {
+                block.classList.add('invisible');
+            }
+        })
+    }
 
-    /*
-        _countTotalPrice() {
-            /!*let totalPrice = 0;
-            this.allProducts.forEach(item => {
-                totalPrice += item.price;
-            });
-            console.log(totalPrice);*!/
-            let totalPrice = this.allProducts.reduce((accum, item) => accum += item.price, 0);
-            console.log(totalPrice);
-        }*/
+    _init() {
+        return false;
+    }
 }
 
-const catalog = new ProductList();
-
-class ProductItem {
-    constructor(product, img = 'https://placehold.it/200x150') {
-        this.product_name = product.product_name;
-        this.price = product.price;
-        this.product_id = product.product_id;
+class Item {
+    constructor(el, img = 'https://placehold.it/200x150') {
+        this.product_name = el.product_name;
+        this.price = el.price;
+        this.product_id = el.product_id;
         this.img = img;
     }
 
@@ -76,39 +71,103 @@ class ProductItem {
                 <div class="desc">
                     <h3>${this.product_name}</h3>
                     <p>${this.price} &curren;</p>
-                    <button class="btn addToCart" 
-                            data-id="${this.product_id}"
-                            data-name="${this.product_name}"
-                            data-price="${this.price}">
-                            add to cart</button>
+                    <button class="btn addToCart" data-id="${this.product_id}">add to cart</button>
                 </div>
             </div>`;
     }
 }
 
-class Cart {
-    constructor() {
+class ProductsList extends List {
+    constructor(cart, url = '/catalogData.json', container = '.products') {
+        super(url, container);
+        this.cart = cart;
+        this.getJson()
+            .then(data => this.handleData(data));
+    }
+
+    _init() {
+        document.querySelector(this.container).addEventListener('click', e => {
+            if (e.target.classList.contains('addToCart')) {
+                let id = +e.target.dataset['id'];
+                cart.addProduct(this.getItem(id));
+            }
+        });
+        document.querySelector('.search-form').addEventListener('submit', e => {
+            e.preventDefault();
+            this.filter(document.querySelector('.search-field').value);
+        });
+    }
+}
+
+class ProductItem extends Item {}
+
+class Cart extends List {
+    constructor(url = '/getBasket.json', container = '.cartMain') {
+        super(url, container);
         this.cartBody = document.querySelector('#cartBody');
         this.btnOpenCart = document.querySelector('#openCart');
         this.btnCloseCart = document.querySelector('#closeCart');
 
         this.btnEventListeners();
-
+        this.getJson()
+            .then(data => this.handleData(data.contents));
     }
 
-    addToBasket() {
+    addProduct(product) {
+        this.getJson(`${API}/addToBasket.json`)
+            .then(data => {
+                if (data.result) {
+                    let find = this.allProducts.find(el => el.product_id === product.product_id);
+                    if (find) {
+                        find.quantity++;
+                        this._updateCart(find);
+                    } else {
+                        let prod = Object.assign({quantity: 1}, product);
+                        this.data = [prod];
+                        this.render();
+                    }
+                } else {
+                    console.log('Error');
+                }
+            })
     }
 
-    init() {
+    removeProduct(element) {
+        this.getJson(`${API}/deleteFromBasket.json`)
+            .then(data => {
+                if (data.result) {
+                    let id = +element.dataset['id'];
+                    let find = this.allProducts.find(el => el.product_id === id);
+                    if (find.quantity > 1) {
+                        find.quantity--;
+                        this._updateCart(find);
+                    } else {
+                        this.allProducts.splice(this.allProducts.indexOf(find), 1);
+                        document.querySelector(`.cart-item[data-id="${id}"]`).remove();
+                    }
+                } else {
+                    console.log('Error');
+                }
+            })
     }
 
-    render() {
+    _updateCart(product) {
+        let block = document.querySelector(`.cart-item[data-id="${product.product_id}"]`);
+        block.querySelector('.product-quantity').textContent = `Quantity: ${product.quantity}`;
+        block.querySelector('.product-total-price').textContent = `${product.quantity * product.price}`;
     }
 
-    totalCartPrice() {
-    }
-
-    clearCart() {
+    _init() {
+        document.querySelector(this.container).addEventListener('click', e => {
+            if (e.target.classList.contains('removeFromCart')) {
+                this.removeProduct(e.target);
+            }
+        });
+        /*
+        document.querySelector('.btn-cart').addEventListener('click', () => {
+            document.querySelector(this.container).classList.toggle('invisible');
+        })
+        */
     }
 
     btnEventListeners() {
@@ -141,28 +200,36 @@ class Cart {
     }
 }
 
-const cart = new Cart;
-
-class CartItem {
-    constructor() {
+class CartItem extends Item {
+    constructor(el, img = 'https://placehold.it/50x60') {
+        super(el, img);
+        this.quantity = el.quantity;
     }
 
-    _init() {
-    }
-
-    totalQuantity() {
-    }
-
-    totalPrice() {
-    }
-
-    addToCart() {
-    }
-
-    removeFromCart() {
+    render() {
+        return `<div class="cart-item" data-id="${this.product_id}">
+                    <div class="product-bio">
+                        <img src="${this.img}" alt="product image">
+                        <div class="product-desc">
+                            <h3 class="product-name">${this.product_name}</h3>
+                            <p class="product-quantity">Quantity: ${this.quantity}</p>
+                            <p class="product-price">${this.price} &curren; each</p>
+                        </div>
+                    </div>
+                    <div class="right-block">
+                        <p class="product-total-price">${this.quantity * this.price}</p>
+                        <button class="removeFromCart" data-id="${this.product_id}">&#128465;</button>
+                    </div>
+                </div>`;
     }
 }
 
-const cartItem = new CartItem();
+let lists = {
+    ProductsList: ProductItem,
+    Cart: CartItem
+};
+
+const cart = new Cart();
+const products = new ProductsList(cart);
 
 
