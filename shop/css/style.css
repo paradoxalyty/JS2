@@ -9,6 +9,51 @@ body {
     justify-content: flex-end;
 }
 
+.search-form {
+    margin: 15px;
+    width: 250px;
+    height: 20px;
+    min-height: 20px;
+    padding: 10px;
+    border: 1px solid #998675;
+    background-color: #ffffff;
+}
+
+label {
+    position: relative;
+}
+
+input[type="text"] {
+    border: none;
+    outline: none;
+    color: #6c6c6c;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 20px;
+}
+
+input[type="submit"] {
+    position: absolute;
+    top: -5px;
+    right: -15px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: url("../images/search.png") no-repeat;
+}
+
+input[type="submit"]:hover {
+    cursor: pointer;
+}
+
+input[type="submit"]:focus {
+    outline: none;
+}
+
+input[type="submit"]:active {
+    background: none;
+}
+
 button.btnCart {
     width: 130px;
     height: 40px;
@@ -29,10 +74,6 @@ button.btnCart {
     text-align: center;
 }
 
-th {
-    padding: 10px;
-}
-
 .btnClose:hover,
 .btnClear:hover {
     color: #ff0000;
@@ -45,7 +86,6 @@ th {
 }
 
 .cartMain {
-    max-width: 100%;
     box-shadow: 0 0 20px 0 rgba(0,0,0,0.75);
     padding: 15px;
     margin: 20px;
@@ -54,7 +94,22 @@ th {
     text-align: center;
 }
 
-.remove {
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.product-bio {
+    display: flex;
+}
+
+.cartItemImage {
+    width: 50px;
+    height: 60px;
+    margin: auto 3px;
+}
+
+.removeFromCart {
     margin: 3px;
     width: 25px;
     height: 25px;
@@ -68,15 +123,15 @@ th {
     line-height: 20px;
     cursor: pointer;
 }
-.remove:hover {
+.removeFromCart:hover {
     border-radius: 50px;
     box-shadow: 0 0 20px 0 rgba(0,0,0,0.75);
     color: #ff0000;
 }
-.remove:focus {
+.removeFromCart:focus {
     outline: none;
 }
-.remove:active {
+.removeFromCart:active {
     outline: none;
     opacity: .1;
 }
@@ -211,6 +266,10 @@ h3 {
     -webkit-box-shadow: none;
     box-shadow: none;
     opacity: .1;
+}
+
+.invisible {
+    display: none;
 }
 /*=====================================CATALOG=========================================*/
 
