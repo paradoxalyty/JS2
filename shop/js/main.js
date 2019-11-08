@@ -25,6 +25,14 @@ class List {
         return this.allProducts.reduce((accum, item) => accum += item.price, 0);
     }
 
+    /**
+     * Каким то удивительным образом метод reduce считает количество товаров в корзине....
+     * @returns {number|*}
+     */
+    calcQuantity() {
+        return this.allProducts.reduce((accum, item) => accum += item.quantity, 0);
+    }
+
     getItem(id) {
         return this.allProducts.find(el => el.product_id === id);
     }
@@ -121,10 +129,12 @@ class Cart extends List {
                     if (find) {
                         find.quantity++;
                         this._updateCart(find);
+                        this._updateCounter();
                     } else {
                         let prod = Object.assign({quantity: 1}, product);
                         this.data = [prod];
                         this.render();
+                        this._updateCounter();
                     }
                 } else {
                     console.log('Error');
@@ -141,14 +151,24 @@ class Cart extends List {
                     if (find.quantity > 1) {
                         find.quantity--;
                         this._updateCart(find);
+                        this._updateCounter();
                     } else {
                         this.allProducts.splice(this.allProducts.indexOf(find), 1);
                         document.querySelector(`.cart-item[data-id="${id}"]`).remove();
+                        this._updateCounter();
                     }
                 } else {
                     console.log('Error');
                 }
             })
+    }
+
+    /**
+     * обновляем количество элементов в корзине
+     * @private
+     */
+    _updateCounter() {
+        document.querySelector('.counter').textContent = `${this.calcQuantity()}`;
     }
 
     _updateCart(product) {
@@ -231,5 +251,3 @@ let lists = {
 
 const cart = new Cart();
 const products = new ProductsList(cart);
-
-
