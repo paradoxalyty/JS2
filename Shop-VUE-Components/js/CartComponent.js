@@ -7,6 +7,7 @@ Vue.component('cart', {
             imgCart: 'https://placehold.it/50x60',
         }
     },
+
     methods: {
         addProduct(product) {
             this.$parent.getJson('addToBasket.json')
@@ -15,30 +16,49 @@ Vue.component('cart', {
                         let find = this.cartItems.find(el => el.product_id === product.product_id);
                         if (find) {
                             find.quantity++;
+                            this.updateCounter();
                         } else {
                             let prod = Object.assign({quantity: 1}, product);
                             this.cartItems.push(prod);
+                            this.updateCounter();
                         }
                     } else {
                         console.log('error');
                     }
                 })
         },
+
         remove(product) {
             this.$parent.getJson('deleteFromBasket.json')
                 .then(data => {
                     if (data.result) {
                         if (product.quantity > 1) {
                             product.quantity--;
+                            this.updateCounter();
                         } else {
                             this.cartItems.splice(this.cartItems.indexOf(product), 1);
+                            this.updateCounter();
                         }
                     } else {
                         console.log('error');
                     }
                 })
         },
+
+        calcQuantity() {
+            return this.cartItems.reduce((accum, item) => accum += item.quantity, 0);
+        },
+
+        updateCounter() {
+            document.querySelector('.counter').textContent = `${this.calcQuantity()}`;
+        },
+
+        clearCart() {
+            this.cartItems.splice(0);
+            this.updateCounter();
+        }
     },
+
     mounted(){
         this.$parent.getJson(this.cartUrl)
             .then(data => {
@@ -47,6 +67,7 @@ Vue.component('cart', {
                 }
             });
     },
+
     template: `
             <div>
                 <button class="btn btnCart" @click="showCart = !showCart" type="button">Open Cart (<b class="counter">0</b>)</button>
@@ -63,7 +84,7 @@ Vue.component('cart', {
                     </div>
                     <p class="message" v-if="!cartItems.length">Cart is empty</p>
                     <div class="cartFooter">
-                        <button id="clearCart" class="btn btnClear">clear all</button>
+                        <button @click="clearCart()" class="btn btnClear">clear all</button>
                         <button @click="showCart = !showCart" id="closeCart" class="btn btnClose">close</button>
                     </div>
                 </div>
