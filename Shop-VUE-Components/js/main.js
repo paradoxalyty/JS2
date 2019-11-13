@@ -2,9 +2,7 @@ const API = 'https://raw.githubusercontent.com/paradoxalyty/online-store-api-exa
 
 const app = new Vue({
         el: '#root',
-        data: {
-            inputSearch: '',
-        },
+        data: {},
         methods: {
             getJson(url) {
                 return fetch(`${API + url}`)

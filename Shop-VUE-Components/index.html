@@ -14,12 +14,7 @@
 <div id="root">
     <header>
         <div class="cart">
-            <form action="#" method="post" class="search-form" @submit.prevent="filterGoods">
-                <label>
-                    <input type="text" class="search-field"  v-model="inputSearch">
-                    <input type="submit" value="">
-                </label>
-            </form>
+            <search ref="search"></search>
             <cart ref="cart"></cart>
         </div>
     </header>
@@ -29,6 +24,7 @@
 </div>
 <!-- development version, includes helpful console warnings -->
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/searchComponent.js"></script>
 <script src="js/CartComponent.js"></script>
 <script src="js/ProductsComponent.js"></script>
 <script src="js/main.js"></script>
