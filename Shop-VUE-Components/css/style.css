@@ -62,8 +62,8 @@ button.btnCart {
 
 .modalWindow {
     position: absolute;
+    top: 0;
     right: 0;
-    /*display: none;*/
     min-width: 300px;
     min-height: 140px;
     margin: 0 auto;
