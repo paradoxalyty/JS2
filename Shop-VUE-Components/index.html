@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shop-VUE-Components</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/favicon.png" type="image/png">
+</head>
+<body>
+<div id="root">
+    <header>
+        <div class="cart">
+            <form action="#" method="post" class="search-form" @submit.prevent="filterGoods">
+                <label>
+                    <input type="text" class="search-field"  v-model="inputSearch">
+                    <input type="submit" value="">
+                </label>
+            </form>
+            <cart ref="cart"></cart>
+        </div>
+    </header>
+    <main>
+        <products ref="products"></products>
+    </main>
+</div>
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="js/CartComponent.js"></script>
+<script src="js/ProductsComponent.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

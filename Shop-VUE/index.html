@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Shop</title>
+    <title>Shop-VUE</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -25,7 +25,7 @@
                 <div id="cartContent" class="cartMain">
                     <div class="cart-item" v-for="item of cartItems" :key="item.product_id">
                         <div class="product-bio">
-                            <img :src="img.cart" class="cartItemImage" alt="product image">
+                            <img :src="imgCart" class="cartItemImage" alt="product image">
                             <div class="product-desc">
                                 <h3 class="product-name">{{item.product_name}}</h3>
                                 <p class="product-quantity">Quantity: {{item.quantity}}</p>
