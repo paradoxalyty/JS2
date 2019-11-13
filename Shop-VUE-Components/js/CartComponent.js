@@ -45,14 +45,24 @@ Vue.component('cart', {
                 })
         },
 
+        /**
+         * Подсчет количества всех товаров в корзине.
+         * @returns {*|number}
+         */
         calcQuantity() {
             return this.cartItems.reduce((accum, item) => accum += item.quantity, 0);
         },
 
+        /**
+         * Метод динамически обновляет количество товаров корзины на кнопке CART.
+         */
         updateCounter() {
             document.querySelector('.counter').textContent = `${this.calcQuantity()}`;
         },
 
+        /**
+         * Метод удаляет все товары корзины при клике на кнопке CLEAR ALL.
+         */
         clearCart() {
             this.cartItems.splice(0);
             this.updateCounter();
