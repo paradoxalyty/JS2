@@ -1,4 +1,19 @@
-Vue.component('products', {
+const product = {
+    props: ['product', 'img'],
+
+    template: `
+        <div class="product-item">
+            <img :src="img" :alt="product.product_name">
+            <div class="desc">
+                <h3>{{ product.product_name }}</h3>
+                <p>{{ product.price }}</p>
+                <button class=" btn buy-btn" @click="$root.$refs.cart.addProduct(product)">add to cart</button>
+                <!--<button class=" btn buy-btn" @click="$parent.$emit('add-product', product)">add to cart</button>-->
+            </div>
+        </div>
+    `
+};
+export const products = {
     data(){
         return {
             catalogUrl: 'catalogData.json',
@@ -6,6 +21,10 @@ Vue.component('products', {
             imgCatalog: 'https://placehold.it/200x150',
             filtered: [],
         }
+    },
+
+    components: {
+      product
     },
 
     methods: {
@@ -30,20 +49,4 @@ Vue.component('products', {
             :img="imgCatalog"></product>
         </div>
     `
-});
-
-Vue.component('product', {
-    props: ['product', 'img'],
-
-    template: `
-        <div class="product-item">
-            <img :src="img" :alt="product.product_name">
-            <div class="desc">
-                <h3>{{ product.product_name }}</h3>
-                <p>{{ product.price }}</p>
-                <button class=" btn buy-btn" @click="$root.$refs.cart.addProduct(product)">add to cart</button>
-                <!--<button class=" btn buy-btn" @click="$parent.$emit('add-product', product)">add to cart</button>-->
-            </div>
-        </div>
-    `
-});
+};
