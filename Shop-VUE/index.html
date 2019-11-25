@@ -20,8 +20,10 @@
                     <input type="submit" value="">
                 </label>
             </form>
-            <button @click="showCart = !showCart" id="openCart" class="btn btnCart">Open Cart (<b class="counter">0</b>)</button>
-            <div v-show="showCart" id="cartBody" class="modalWindow">
+            <!--@click="animationInOut = true"-->
+            <!--@click="animationInOut = true"-->
+            <button @click="cartVisibilityHandler" id="openCart" class="btn btnCart">Open Cart (<b class="counter">0</b>)</button>
+            <div v-show="showCart" id="cartBody" class="modalWindow" :class="{'swing-out-top-bck': animation, 'swing-in-top-fwd': !animation}">
                 <div id="cartContent" class="cartMain">
                     <div class="cart-item" v-for="item of cartItems" :key="item.product_id">
                         <div class="product-bio">
@@ -41,7 +43,7 @@
                 <p class="message" v-if="cartItems.length === 0">Cart is empty</p>
                 <div class="cartFooter">
                     <button id="clearCart" class="btn btnClear">clear all</button>
-                    <button @click="showCart = !showCart" id="closeCart" class="btn btnClose">close</button>
+                    <button @click="cartVisibilityHandler" id="closeCart" class="btn btnClose">close</button>
                 </div>
             </div>
         </div>

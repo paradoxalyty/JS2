@@ -12,8 +12,21 @@ const app = new Vue({
             filtered: [],
             cartItems: [],
             imgCart: 'http://placehold.it/50x60',
+            animation: true,
         },
         methods: {
+            cartVisibility() {
+                this.showCart = !this.showCart;
+            },
+            cartAnimation() {
+                this.animation = !this.animation;
+            },
+            cartVisibilityHandler() {
+                this.cartAnimation();
+                setTimeout(()=>{
+                    this.cartVisibility()
+                },500);
+            },
             getJson(url) {
                 return fetch(`${API + url}`)
                     .then(result => result.json())
